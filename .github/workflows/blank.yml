@@ -1,0 +1,28 @@
+name: Build binaries
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build ${{ matrix.device }} - ${{ matrix.esphome }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        device:
+          - relay-board-x4
+
+        esphome:
+          - latest
+
+
+    container: ghcr.io/esphome/esphome:${{ matrix.esphome }}
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v2
+      - uses: ./.github/actions/build
+        with:
+          device: ${{ matrix.device }}
